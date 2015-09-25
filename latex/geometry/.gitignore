@@ -1,0 +1,9 @@
+*.aux
+*.log
+*.nav
+*.out
+/CrystalGeometry.pdf
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
