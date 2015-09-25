@@ -26,11 +26,11 @@ plotx2east
 mtexdata forsterite
 
 plot(ebsd)
-poly = selectPolygon
+%poly = selectPolygon
 
 %%
 
-% poly = [5 2 10 5]*10^3
+poly = [5 2 10 5]*10^3
 ebsd = ebsd(ebsd.inpolygon(poly));
 
 plot(ebsd)
@@ -51,13 +51,35 @@ plot(grains.boundary,'linewidth',1.5)
 % stop overide mode
 hold off
 
+%%
+
+[m,id] = max(grains.area)
+
+plot(grains)
+hold on
+plot(grains(id).boundary,'linecolor','y','linewidth',2)
+hold off
+
+
+%plot(grains,grains.area)
+
+
 
 %%
-ebsd(grains(33))
+ebsd(grains(id))
+
+plot(ebsd(grains(id)),ebsd(grains(id)).mis2mean.angle ./ degree)
+
+hold on
+plot(grains(id).boundary)
+hold off
+
 % ebsd(ebsd.grainId == 33)  %equivalent to the command
 
 
 %% Grain properties
+% shapeFactor boundarySize aspectRatio diameter perimeter hasHole grainSize
+% neighbors pricipal components
 
 plot(grains,grains.shapeFactor)
 
@@ -66,6 +88,9 @@ plot(grains,grains.shapeFactor)
 
 %plot(grains,grains.area)
 
+hist(grains.area)
+
+%%
 hist(grains)
 
 
@@ -76,10 +101,23 @@ largeGrains = grains(grains.grainSize > 100);
 
 plot(grains)
 hold on
-plot(x,y,'o','markerFaceColor','r')
-%idString = cellstr(int2str(largeGrains.id));
-%text(x,y,idString)
+%plot(x,y,'o','markerFaceColor','r')
+idString = cellstr(int2str(largeGrains.id));
+text(x,y,idString)
 hold off
+
+%% direction of the grains
+
+plot(grains)
+
+pc = largeGrains.principalComponents;
+
+hold on
+u = pc(1,1,:);
+v = pc(2,1,:);
+quiver(x,y,u(:),v(:),0.5,'color','k','linewidth',2);
+hold off
+
 
 %% Misorientation to mean orientation
 
@@ -104,7 +142,7 @@ plot(myGrain.boundary,'linewidth',2)
 hold on
 plot(ebsd(myGrain),ebsd(myGrain).mis2mean.angle ./ degree)
 hold off
-%colorbar
+mtexColorbar
 
 
 %% Filling not indexed holes
@@ -197,6 +235,30 @@ plot(grains(12000,4000).boundary,'linecolor','r','linewidth',2,...
 % stop overide mode
 hold off
 
+%%
+
+onePixelGrains = grains(grains.grainSize == 1)
+
+%plot(onePixelGrains)
+
+ebsd_corrected = ebsd;
+
+ebsd_corrected(onePixelGrains) = [];
+
+%%
+
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd)
+
+onePixelGrains = grains(grains.grainSize == 1)
+
+plot(grains)
+
+
+%%
+
+
+
+
 %% Grain smoothing
 % The reconstructed grains show the typicaly staircase effect. This effect
 % can be reduced by smoothing the grains. This is particulary important
@@ -256,13 +318,17 @@ figure(1)
 plot(grains(931).boundary)
 
 %%
+
+grains.boundary('indexed')
+
+%%
 % lets combine it with the orientation measurements inside
 
 % define the colorcoding such that the meanorientation becomes white
 oM = ipdfHSVOrientationMapping(grains(931));
 %oM.inversePoleFigureDirection = grains(931).meanOrientation * oM.whiteCenter;
-%oM.whiteCenter = inv(grains(931).meanOrientation) * oM.inversePoleFigureDirection
-%oM.maxAngle = 10*degree;
+oM.whiteCenter = inv(grains(931).meanOrientation) * oM.inversePoleFigureDirection
+oM.maxAngle = 10*degree;
 figure(2), plot(oM,'resolution',0.5*degree)
 
 % get the ebsd data of grain 931
@@ -299,8 +365,8 @@ plot(grains,'translucent',.3)
 legend off
 hold on
 plot(gB_Fo,gB_Fo.misorientation.angle./degree,'linewidth',1.5)
+mtexColorbar
 hold off
-%colorbar
 
 %% Classifing special boundaries
 
@@ -308,20 +374,27 @@ close all
 
 mAngle = gB_Fo.misorientation.angle./ degree;
 
-hist(mAngle)
+hist(mAngle,20)
 
-[~,id] = histc(mAngle,0:30:120);
+gB_Fo(angle(gB_Fo.misorientation,CSL(3))<3*degree)
 
+%%
 
+plot(grains,'facealpha',0.3)
+hold on
+plot(gB_Fo(mAngle > 58 & mAngle < 63),'linewidth',3,'linecolor','r')
+hold off
 
 %%
 
 plot(grains.boundary,'linecolor','k')
 
+[~,id] = histc(mAngle,0:30:120);
+
 hold on
-plot(gB_Fo(id==1),'linecolor','b','linewidth',2,'DisplayName','>40^\circ')
-plot(gB_Fo(id==2),'linecolor','g','linewidth',2,'DisplayName','20^\circ-40^\circ')
-plot(gB_Fo(id==3),'linecolor','r','linewidth',2,'DisplayName','10^\circ-20^\circ')
-plot(gB_Fo(id==4),'linecolor','m','linewidth',2,'DisplayName','< 10^\circ')
+plot(gB_Fo(id==1),'linecolor','b','linewidth',2,'DisplayName','>90^\circ')
+plot(gB_Fo(id==2),'linecolor','g','linewidth',2,'DisplayName','60^\circ-90^\circ')
+plot(gB_Fo(id==3),'linecolor','r','linewidth',2,'DisplayName','30^\circ-60^\circ')
+plot(gB_Fo(id==4),'linecolor','m','linewidth',2,'DisplayName','< 30^\circ')
 
 hold off

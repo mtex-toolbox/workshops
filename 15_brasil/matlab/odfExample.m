@@ -46,12 +46,12 @@ plotIPDF(ebsd.orientations,vector3d.X,'contourf')
 
 %% plot measurements in orientation space
 
-plotSection(ebsd.orientations,'sections',6)
-%plotSection(ebsd.orientations,'sections',6,'contourf','all') % this takes some time
+%plotSection(ebsd.orientations,'sections',6)
+plotSection(ebsd.orientations,'sections',6,'contourf','all') % this takes some time
 
 %% compute an ODF from the EBSD data
 
-odf = calcODF(ebsd.orientations,'halfwidth',5*degree)
+odf = calcODF(ebsd.orientations,'halfwidth',7.5*degree)
 
 %% and plot it in the traditional way
 
@@ -66,6 +66,25 @@ plotSection(odf,oS)
 %% plot pole figures of the odf
 
 plotPDF(odf,Miller({1,0,0},{0,1,0},{0,0,1},odf.CS))
+
+%%
+
+plotIPDF(odf,xvector,odf.CS)
+
+%%
+
+ori = calcModes(odf,2)
+
+%%
+
+plot(odf,'sections',12)
+
+%%
+
+hold on
+plot(ori,'MarkerFaceColor','k','marker','s')
+hold off
+
 
 %% what is the volume of the fibre
 % there seems to be a fibre visible in (010) pole figure
@@ -152,10 +171,9 @@ plot(y,zeros(size(y)),'o','MarkerSize',10,'MarkerFaceColor','b')
 
 %% maybe we should use a histogram
 
-y = randomPoints(400);
+y = randomPoints(400000);
 
 hist(y,100)
-
 
 %% not so good, it is not smooth at all,  other idea: kernel density estimators
 
@@ -167,7 +185,7 @@ plot(y,zeros(size(y)),'o','MarkerSize',10,'MarkerFaceColor','r')
 % some discretisation
 x = linspace(0,1,500);
 
-s = 0.02;
+s = 0.2;
 z = zeros(1,length(x));
 ssz = [];
 

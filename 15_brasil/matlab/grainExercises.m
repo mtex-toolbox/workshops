@@ -55,7 +55,7 @@ plotx2east
 
 
 %% Exercise 6
-% Find all CSL(3) boundaries with the list of iron to iron grain
+% Find all CSL(3) boundaries within the list of iron to iron grain
 % boundaries. As a threshold use 3 degree.
 % What is the relative length of CSL(3) grain boundaries in comparison to
 % all iron to iron grain boundaries?

@@ -75,14 +75,40 @@ plotx2east
 % a) plot the misorientation angle to the reference orientation
 % (104,90,175)
 %
-% b) plot the misorientation angle to the mean orientation
-% (104,90,175)
-%
-% c) use an ipf key with inverse pole figure direction such that the mean
+
+ori_ref = orientation('Euler',104*degree,90*degree,175*degree,ebsd('Fo').CS);
+
+omega = angle(ori_ref, ebsd('Fo').orientations);
+
+plot(ebsd('fo'),omega./degree)
+
+CLim(gcm,[0,2.5])
+
+%% b) plot the misorientation angle to the mean orientation
+% 
+
+ori_ref = mean(ebsd('Fo').orientations)
+
+omega = angle(ori_ref, ebsd('Fo').orientations);
+
+plot(ebsd('fo'),omega./degree)
+
+CLim(gcm,[0,2.5])
+
+%% c) use an ipf key with inverse pole figure direction such that the mean
 % orientation is colored white
 %
 % useful commands: angle, caxis, ipdfHSVOrientationMapping, 
-%
+
+oM = ipdfHSVOrientationMapping(ebsd('Fo'));
+
+oM.inversePoleFigureDirection = zvector;
+oM.whiteCenter = inv(mean(ebsd('Fo').orientations)) * zvector 
+oM.maxAngle = 2.5*degree
+
+plot(ebsd('Fo'),oM.orientation2color(ebsd('Fo').orientations));
+
+
 %%
 % a)
 

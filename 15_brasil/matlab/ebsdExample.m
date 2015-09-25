@@ -22,6 +22,9 @@
 ebsd = loadEBSD('Forsterite.ctf','convertEuler2SpatialReferenceFrame')
 
 
+ebsd = reduce(ebsd,4)
+
+
 %% plot phase information
 
 % adjust plotting convention
@@ -40,11 +43,11 @@ plot(ebsd('Forsterite'))
 
 plot(ebsd,ebsd.bc)
 
-%mtexColorMap black2white
-%mtexColorbar
+mtexColorMap black2white
+mtexColorbar
 
-% gcm % this is the current MTEX figure object
-%CLim(gcm,[0,150])
+gcm; % this is the current MTEX figure object
+CLim(gcm,[0,150])
 
 %% visualize orientations
 
@@ -56,6 +59,8 @@ oM.inversePoleFigureDirection = zvector
 
 % visualize the color map
 plot(oM)
+set(gcf,'renderer','zBuffer')
+
 
 %%
 
@@ -78,8 +83,8 @@ hold off
 
 %% the inverse
 
-plotIPDF(ori,colors,[vector3d.X, vector3d.Y, vector3d.Z],...
-  'points',250,'MarkerSize',7,'MarkerEdgeColor','k')
+plotIPDF(ori,[xvector,yvector,zvector],...
+  'points',250,'MarkerSize',7,'MarkerEdgeColor','k','property',colors)
 
 
 %% combine with other plots
@@ -100,6 +105,9 @@ hist(ebsd.bc)
 
 %% remove data according to properties
 
+plot(ebsd(ebsd.bc<50),'Facecolor','r')
+
+%%
 ebsd(ebsd.bc<50).phase = 0;
 
 plot(ebsd)
@@ -125,13 +133,17 @@ plot(ebsd(ebsd.inpolygon(poly)))
 
 %% rotate the data set
 
-rot = rotation('axis',zvector,'angle',2*degree);
+rot = rotation('axis',zvector,'angle',20*degree);
 
 plot(rotate(ebsd_roi,rot))
 
 
 %%
 
-plot(ebsd,ebsd.KAM)
+plot(ebsd,ebsd.KAM('threshold',5*degree))
 CLim(gcm,[0,0.1])
+
+%%
+
+plot(reduce(ebsd,4))
 

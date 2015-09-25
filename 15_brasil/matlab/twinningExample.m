@@ -63,7 +63,7 @@ hold off
 
 %% compute the misorientation between two grains
 
-mori = inv(grains(65).meanOrientation) * grains(74).meanOrientation;
+mori = inv(grains(65).meanOrientation) * grains(74).meanOrientation
 
 %% select twinning boundaries
 
@@ -87,7 +87,7 @@ hold off
 %% Other properties that might help to identify grain boundaries
 
 % a shortcut: check for twinning
-gBM2M.isTwinning(twinMori,5*degree)
+gBM2M.isTwinning(twinMori,5*degree);
 
 % the direction - antipodal!!
 gBM2M.direction
