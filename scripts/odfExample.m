@@ -35,19 +35,24 @@ ebsd = ebsd('Forsterite')
 %% plot c-axis distribution
 
 plotPDF(ebsd.orientations,Miller(0,0,1,ebsd.CS))
+mtexColorMap LaboTeX
 
 %% plot as contour plot
 
 plotPDF(ebsd.orientations,Miller(0,0,1,ebsd.CS),'contourf')
+mtexColorMap LaboTeX
 
 %% do the same for a inverse pole figure
 
 plotIPDF(ebsd.orientations,vector3d.X,'contourf')
+mtexColorMap LaboTeX
 
 %% plot measurements in orientation space
 
-%plotSection(ebsd.orientations,'sections',6)
-plotSection(ebsd.orientations,'sections',6,'contourf','all') % this takes some time
+figure(1)
+plotSection(ebsd.orientations,'sections',6)
+%plotSection(ebsd.orientations,'sections',6,'contourf','all') % this takes some time
+mtexColorMap LaboTeX
 
 %% compute an ODF from the EBSD data
 
@@ -57,11 +62,12 @@ odf = calcODF(ebsd.orientations,'halfwidth',7.5*degree)
 
 figure(2)
 plot(odf,'sections',6,'contourf')
+mtexColorMap LaboTeX
 
 %% or as sigma sections
 
-oS = pfSections(odf.CS,odf.SS)
-plotSection(odf,oS)
+plot(odf,'sigma')
+mtexColorMap LaboTeX
 
 %% plot pole figures of the odf
 
@@ -104,14 +110,17 @@ fibreVolume(odf,Miller(0,1,0,odf.CS),rMax,10*degree) * 100
 %% do the same with the EBSD data
 
 r = ebsd.orientations * Miller(0,1,0,odf.CS)
-rMean = mean(r,'antipodal')
+rMean = mean(r)
 
 fibreVolume(ebsd.orientations,Miller(0,1,0,odf.CS),rMean,10*degree) * 100
 
-% what is wrong with the following formula? (hint to the teacher: anxxxxal
-% - actually rMean = mean(...) should automatically set this property)
-
+% this is actually only a shortcut for
 %mean( angle(r,rMean) < 10*degree ) * 100
+
+% Question: what is wrong with these lines?
+% Tip: 
+% plot(r,'contourf')
+% annotate(rMean)
 
 
 %%

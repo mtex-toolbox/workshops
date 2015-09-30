@@ -1,11 +1,11 @@
-%%                MTEX Workshop Belo Horizonte, 2015
+%%          TEXMAT-CZM Texture School, Clausthal, 2015
 %
-%%             Tensor Analysis with MTEX
-%                Ralf Hielscher, TU Chemnitz
+%%                   Tensor Analysis with MTEX
+%                    Ralf Hielscher, TU Chemnitz
 %
 %%
-% The following script demostrates some of the facilities of MTEX to
-% work with tensorial properties.
+% The following script demostrates how to compute average tensors from
+% diffraction pole figures.
 %
 % Run this script section by section and follow the output. You are
 % encauraged to alter the script to get a better feeling about MTEX.
@@ -16,263 +16,113 @@
 % F9                    - evaluate the selected command
 %
 
-%%
+%% Basic Setting
 
-% adjust plotting convention
-plotx2east
+% set up a nice colormap
+setMTEXpref('defaultColorMap',blue2redColorMap);
 
-%% define crystal symmetry
+% some EBSD data Glaucophane and Epidote
+ebsd = loadEBSD([mtexDataPath '/EBSD/data.ctf'],...
+  'convertEuler2SpatialReferenceFrame')
+
+%% Define Elastic Stiffness Tensors for Glaucophane and Epidote
 %
-% crystal symmetry - FCC Nickel - slip system {111}<110>
-cs = crystalSymmetry('cubic',[3.523,3.523,3.523],'mineral','Nickel')
-%
-%
-%% define the slip system
-% by convention 
-% b = slip direction [uvw] in the slip plane (hkl) 
-% n = slip plane normal(hkl)
-% angle b to n = 90 degrees and b.n = 0
-%
-% define the slip direction and slip plane normal
-b = Miller(0,-1,1,cs,'uvw'); % slip direction [uvw] in the slip plane (hkl)
-n = Miller(1,1,1,cs,'hkl');  % slip plane normal (hkl)
-% check that b and n are orthogonal
-Angle_b_to_n = angle(vector3d(b),vector3d(n))/degree
+% Glaucophane elastic stiffness (Cij) Tensor in GPa Bezacier, L., Reynard,
+% B., Bass, J.D., Wang, J., and Mainprice, D. (2010) Elasticity of
+% glaucophane and seismic properties of high-pressure low-temperature
+% oceanic rocks in subduction zones. Tectonophysics, 494, 201-210.
 
-%% define extension direction
-% a normal stress extension direction in specimen co-ordinates
-r = vector3d(0,0,1)
+% define the reference frame
+csGlaucophane = crystalSymmetry('2/m',[9.5334,17.7347,5.3008],...
+  [90.00,103.597,90.00]*degree,'X||a*','Z||c','mineral','Glaucophane');
 
-%% compute Schmid factor directly
-
-% Schmid factor for slip plane normal (n) and slip direction (b) for
-% direction r
-Schmid_factor = dot(n,r) * dot(b,r)
-
-%% compute Schmid factor using Schmid tensor
-% alternativly we can define the Schmid tensor and stress tensor
-% schmid factor for slip plane normal (n) and slip direction (b)
-Schmid_tensor = SchmidTensor(n,b)
-
-% define stress components of the tensor
-% e.g. Uniaxial stress along the Z specimen direction
-M =.... 
- [[  0.00   0.00    0.00];...
- [   0.00   0.00    0.00];...
- [   0.00   0.00    1.00]];
-
-% define MTEX stress tensor
-sigma = tensor(M,'name','stress')
-
-% the Schmid factor may be computed as tensor product Schmid_tensor(i,j) *
-% sigma(i,j)
-Schmid_factor = double(EinsteinSum(Schmid_tensor,[-1,-2],sigma,[-1,-2]))
-
-%% Schmid factor for a list of tension directions
-% the above computation can be easily extended to a list of tension
-% directions
-
-% define grid of tension directions
-r = plotS2Grid('resolution',0.5*degree,'upper')
-
-% define the coressponding list of normal stress tensors
-sigma = EinsteinSum(tensor(r),1,tensor(r),2,'name','stress tensor')
-
-% compute the Schmid factors for all normal stress directions
-Schmid_factor_hemisphere = double(...
-  EinsteinSum(Schmid_tensor,[-1,-2],sigma,[-1,-2],'name','Schmid factor'));
-
-% plot the Schmid factors
-contourf(r,Schmid_factor_hemisphere)
-mtexColorMap blue2red
-colorbar
-
-%% Finding the active slip system 
-%
-% With slip direction b and slip plane n also all crystallographic
-% symmetric directions and planes which are orthogonal are valid slip
-% systems. Let us determine those equivalent slip systems by
-% symmetrising b and n
-
-[bSym,l] = symmetrise(b,'antipodal');
-[nSym,l] = symmetrise(n,'antipodal');
-
-% restrict b and n to pairs of orthogonal vectors
-[row,col] = find(isnull(dot_outer(vector3d(bSym),vector3d(nSym))));
-bSym = bSym(row)
-nSym = nSym(col)
-%
-% vizualize crystallographic symmetric slip systems
-plot(bSym,'antipodal')
-hold all
-plot(nSym)
-hold off
-
-%% compute Schmid factors for all these slip systems
-
-% define a stress tensor with normal stress in 001 direction
-M = zeros(3);M(3,3) = 1;
-sigma001 = tensor(M,'name','stress')
-
-% and rotate it a bit
-sigmaRot = rotate(sigma001,...
-  rotation('Euler',20*degree,20*degree,-30*degree))
-
-% define a list of Schmid tensors - one for each slip sytem
-RSym = SchmidTensor(bSym,nSym)
-
-% compute a list Schmid factors - one for each slip system
-Schmid_Factor_List = double(...
-  EinsteinSum(RSym,[-1,-2],sigmaRot,[-1,-2],'name','Schmid factor'))
-[Schmid_Max,ind] = max(Schmid_Factor_List)
-
-% we observe that the Schmid factor is always between -0.5 and 0.5.
-% The largest value indicates the active slip system. 
-% In the above case this would be the slip system found by ind 
-Active_Slip_Direction = bSym(ind)
-Active_Slip_Plane = nSym(ind)
-
-%% Finding the active slip system 
-%
-% All the above steps for finding the active slip system,
-% i.e.
-% * find all symmetrically equivalent slip systems
-% * compute all the Schmid factors
-% * find the maximum Schmid factor find the corresponding slip system 
-%
-% can be preformed by the single command calcShearStress
-% the output is
-%
-% * Schmid_Max - maximum Schmid factor
-% * bActive    - active slip direction
-% * nActive    - active slip normal
-% * tau        - all schmid factors [number of slipSystems x number of stress tensors]
-% * ind        - index of the active slip system
-
-[Schmid_Max,bActive,nActive,tau,ind] = ...
-  calcShearStress(sigmaRot,n,b,'symmetrise')
+% define the tensor
+CGlaucophane = tensor(...
+  [[122.28   45.69   37.24   0.00   2.35   0.00];...
+  [  45.69  231.50   74.91   0.00  -4.78   0.00];...
+  [  37.24   74.91  254.57   0.00 -23.74   0.00];...
+  [   0.00    0.00    0.00  79.67   0.00   8.89];...
+  [   2.35   -4.78  -23.74   0.00  52.82   0.00];...
+  [   0.00    0.00    0.00   8.89   0.00  51.24]],...
+  csGlaucophane,'name','stiffness')
 
 %%
-% This command allows also to compute the maximum Schmidt factor
-% and the active slip system for a list of stress tensors in parallel. 
-% Consider again the list of normal stress tensors corresponding
-% to any direction sigma
+% Epidote elastic stiffness (Cij) Tensor in GPa Aleksandrov, K.S.,
+% Alchikov, U.V., Belikov, B.P., Zaslavskii, B.I. and Krupnyi, A.I.: 1974
+% 'Velocities of elastic waves in minerals at atmospheric pressure and
+% increasing precision of elastic constants by means of EVM (in Russian)',
+% Izv. Acad. Sci. USSR, Geol. Ser.10, 15-24.
 
-sigma
+% define the reference frame
+csEpidote= crystalSymmetry('2/m',[8.8877,5.6275,10.1517],...
+  [90.00,115.383,90.00]*degree,'X||a*','Z||c','mineral','Epidote');
 
-% Then we can compute the maximum Schmid factor and 
-% the active slip system for all these stress tensors by the single command
-[Schmid_Max,bActive,nActive,tau,ind] = ...
-  calcShearStress(sigma,n,b,'symmetrise');
+% define the tensor
+CEpidote = tensor(...
+  [[211.50    65.60    43.20     0.00     -6.50     0.00];...
+  [  65.60   239.00    43.60     0.00    -10.40     0.00];...
+  [  43.20    43.60   202.10     0.00    -20.00     0.00];...
+  [   0.00     0.00     0.00    39.10      0.00    -2.30];...
+  [  -6.50   -10.40   -20.00     0.00     43.40     0.00];...
+  [   0.00     0.00     0.00    -2.30      0.00    79.50]],...
+  csEpidote,'name','stiffness')
+
+% plot the stiffness tensor
+plot(CEpidote,'complete')
+
+%% The Average Tensor from EBSD Data
+% The Voigt, Reuss, and Hill averages for all phases are computed by
+
+[CVoigt,CReuss,CHill] =  calcTensor(ebsd({'Epidote','Glaucophane'}),CGlaucophane,CEpidote)
 
 %%
-% plot the maximum Schmid factor
-contourf(r,abs(Schmid_Max));
+% for a single phase the syntax is
 
-colorbar(gcm)
+[CVoigtEpidote,CReussEpidote,CHillEpidote] = calcTensor(ebsd('Epidote'),CEpidote)
 
-%savefigure('../tensor/pic/SFMax.pdf')
-
-%% Plot the index of the active slip system
-
-pcolor(r,ind)
-mtexColorMap black2white
-
-% We can even visualize the active slip system
-% take as directions the centers of the fundamental sectors
-r_Center = symmetrise(cs.fundamentalSector.center,cs);
-
-% generate stress tensors
-sigma = EinsteinSum(tensor(r_Center),1,r_Center,2)
-%sigma = EinsteinSum(tensor(r),1,tensor(r),2) ?
-
-% compute active slip system
-[tauMax,bActive,nActive] = calcShearStress(sigma,n,b,'symmetrise');
-bActive(tauMax<0) = -bActive(tauMax<0);
-
-hold on
-% plot active slip plane in red
-quiver(r_Center,bActive,'ArrowSize',0.15,'LineWidth',2,'Color','r',...
-  'DisplayName','slip normal');
-
-% plot active slip direction in green
-quiver(r_Center,nActive,'ArrowSize',0.15,'LineWidth',2,'Color','g',...
-  'DisplayName','slip direction');
-hold off
-
-%savefigure('../tensor/pic/SFActive.pdf')
-
-legend('location','northeast')
-drawNow(gcm,'figSize','large')
+plot(CVoigtEpidote)
 
 
-%% Real situation in an EBSD map
-% So far we have always assumed that the stress tensor is already given
-% relatively to the crystal coordinate system. Next we want to examine
-% the case where the stress is given in specimen coordinates and 
-% we know the orientation of the crystal. 
-% Lets assume we have normal stress tensor in 001 direction 
-M = zeros(3);M(3,3) = 1;
-sigma001 = tensor(M,'name','stress')
-%
-% Furthermore, we assume the orientations to be given by an EBSD map.
-% Thus the next step is to extract the orientations from the EBSD data 
-% and transform the stress tensor from specimen to crystal coordinates
-%
-% load MTEX dataset aachen
-mtexdata aachen
+%% ODF Estimation
+% Lets assume we do not have individual orientations from EBSD measurements
+% but an Epidote ODF obtained from pole figure diffraction measurement.
+% Here we simulate this setting by computing an ODF out of the individual
+% orientations.
 
-% extract the orientations
-ori = ebsd('Fe').orientations;
+odfEpidote = calcODF(ebsd('Epidote').orientations,'halfwidth',10*degree)
 
-% transform the stress tensor from specimen to crystal coordinates
-sigmaCS = rotate(sigma001,inv(ori))
 
-% Next we compute maximum Schmid factor and the active slip system
-% for every orientation in the ebsd data set
-[Schmid_Max,bActive,nActive,tau,ind] = calcShearStress(sigmaCS,n,b,'symmetrise');
-
-% plot 
-plot(ebsd('Fe'),Schmid_Max)
-%colorbar(gcm)
 %%
-% The above procedure may also be applied to grains which has the advantage
-% to be much less computational demanding for large data sets.
+% Now we have two options to compute Voigt, Reuss, Hill average stiffness
+% tensors from the Epidote ODF. The easiest way is to compute individual
+% orientations from the Epidote ODF and use these individual orientations
+% for the average computation
+
+ori = calcOrientations(odfEpidote,10000)
+
+CVoigtE1 = calcTensor(ori,CEpidote)
+
+plot(CVoigtE1)
+
+%%
+% We see there is a slight difference compared to the direct computation
+% from the EBSD data.
 %
-% compute grains
-grains = smooth(calcGrains(ebsd('indexed')))
-grains_Fe = grains('Fe');
+% Second, it is possible to compute the average tensors using the harmonic
+% expansion of the ODF.
 
-% transform the stress tensor from specimen to crystal coordinates
-sigmaCS = rotate(sigma001,inv(grains_Fe.meanOrientation))
+CVoigtE2 = calcTensor(odfEpidote,CEpidote)
 
-% compute maximum Schmid factor and active slip system
-[Schmid_Max,bActive,nActive,tau,ind] = calcShearStress(sigmaCS,n,b,'symmetrise');
+plot(CVoigtE2)
 
-plot(grains_Fe,abs(Schmid_Max))
-%colorbar(gcm)
+%%
+% The difference to first way is usually small. The difference to average
+% tensor computed directly from the EBSD data can be expained by the
+% additional halfwidth parameter which has been used for ODF estimation.
 
-%% We may also colorize the active slip system.
-
-close all
-
-colorOrder = get(gca,'colorOrder');
-
-% consider only present slips systems
-presentSystems = unique(ind);
-
-% cycle through slip systems and plot them
-for i = 1:length(presentSystems)
-  
-  id = presentSystems(i);
-  plot( grains_Fe(ind==id) , 'FaceColor', colorOrder(i,:),...
-    'DisplayName',[char(nSym(id)) ' ' char(bSym(id))]);  
-  hold all
-  
-end
-
-plot(grains.boundary)
-hold off
-
-legend('show')
-drawNow(gcm,'figSize','huge')
+%% Exercises
+%
+% a) Investigate the influence of the halfwidth to the average tensor
+%
+% b) Investigate the influence of the number of individual orientations to
+% the average tensor

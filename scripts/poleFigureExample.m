@@ -1,4 +1,4 @@
-%%                MTEX Workshop Belo Horizonte, 2015
+%%             TEXMAT-CZM Texture School, Clausthal, 2015
 %
 %%             Pole Figure Analysis with MTEX
 %                Ralf Hielscher, TU Chemnitz
@@ -20,7 +20,7 @@
 
 % adjust plotting convention
 plotx2east
-
+close all
 %% import data
 
 % load the crystal information file 
@@ -40,7 +40,7 @@ fname = {...
 h = {...
   Miller(0,2,-2,1,CS),...
   Miller(1,0,-1,0,CS),...
-  [Miller(0,1,-1,1,CS),Miller(1,0,-1,1,CS)],... % superposed pole figures
+  Miller({0,1,-1,1},{1,0,-1,1},CS),... % superposed pole figures
   Miller(1,0,-1,2,CS),...
   Miller(1,1,-2,0,CS),...
   Miller(1,1,-2,1,CS),...
@@ -57,18 +57,16 @@ pf = loadPoleFigure(fname,h,'superposition',c)
 plot(pf)
 % plot(pf,'contourf')
 
-%colorbar(gcm)
+mtexColorbar
 
-%% some plotting options
-
-%annotate([xvector,yvector,zvector],'label',{'X','Y','Z'},...
-%  'backgroundColor','w')
 
 %% extract pole figure data
 
 % logarithmic plot
-plot(pf,log(pf.intensities)/log(10))
-colorbar(gcm)
+logIntensities = log(pf.intensities)/log(10);
+plot(pf,logIntensities)
+mtexColorbar
+
 
 %%
 
@@ -83,14 +81,28 @@ pf('11-21').h
 %% rotate
 rot = rotation('axis',vector3d(1,-1,0),'angle',30*degree)
 plot(rotate(pf,rot))
-colorbar(gcm)
+mtexColorbar
 
 %% defocussing and background correction 
+% Lets define a very simple formula for defocussing correction. In order to
+% do defocussing correction right this curve should have been measured from
+% a powder sample of the same material.
+
+close all
+theta = linspace(0,90*degree)
+plot(theta./degree,cos(0.7 * theta),'linewidth',2)
+xlabel('polar angle (degree)')
+ylabel('I_0 / I_\theta')
+
+%%
+% Next we want to use this simple model to correct our pole figure
+% intensities.
 
 % copy data into a second variable
 pf_cor = pf;
 
-% change intensities in dependency of the polar angle
+% change intensities in dependency of the polar angle (in MTEX always
+% called theta)
 pf_cor.intensities = pf.intensities ./ cos(0.7 * pf.r.theta); 
 
 figure(1)
@@ -108,182 +120,74 @@ close all
 plot(pf)
 
 %% ODF reconstrution
+%
+% ODF reconstruction in MTEX mean automatic fitting of ODF which consists
+% of many unimodal components to the given pole figure intensities. The
+% number and halfwidth of those components can be controlled by the options
+% |halfwidth| and |resolution|. Lets compare the following two
+% reconstructions
+
+
 
 odf = calcODF(pf,'zero_Range')
+odf_10 = calcODF(pf,'zero_Range','halfwidth',10*degree)
 
 %% plot reconstructed pole figures
 
-plotPDF(odf,pf.h)
+figure(1)
+plotPDF(odf,pf.h,'superposition',pf.c)
+
+figure(2)
+plotPDF(odf_10,pf.h,'superposition',pf.c)
 
 %%
+% We observe that choosing a larger halfwidth makes the ODF smoother and in
+% general also reduces the fit to the data.
 
+calcError(pf,odf) * 100
+calcError(pf,odf_10) * 100
+
+
+%%
+% Contrary, it might help to reduce the halfwidth in order to improve the
+% reconstruction for very sharp textures. By default the halfwidth is
+% choosen in dependency of the pole figure grid, i.e., a fine grid results
+% in a small halfwidth and a coarse grid results in a large halfwidth. 
+
+%%
+% We may plot a difference plot between the original pole figures and the
+% recalculated pole figures.
+
+pf = loadPoleFigure(fname,h,'superposition',c);
 pf_err = calcErrorPF(pf,odf)
-
 plot(pf_err)
-colorbar(gcm)
+mtexColorbar
 
 %%
+% Those difference pole figures may be used to filter out outliers from the
+% measured diffraction intensities. The filtered diffraction intensities
+% may allow for a more accurate reconstruction.
 
-figure(1)
-plot(odf,'sigma','sections',12)
-
-%%
-
-figure(2)
-plotPDF(odf,Miller(0,0,0,1,CS))
-
-
-%% Modelling ODFs
-
-% determine the maximum value and the modal orientation of an ODF
-[value,ori] = max(odf,2)
-
-figure(1)
-annotate(ori(1),'label','A','backgroundColor','w')
-annotate(ori(2),'label','B','backgroundColor','w')
-
-%%
-
-100 * volume(odf,ori(1),10*degree)
-100 * volume(odf,ori(2),10*degree)
-
-%%
-
-figure(2)
-v = vector3d('polar',35*degree,45*degree);
-annotate(v)
-
-100 * fibreVolume(odf,Miller(0,0,1,CS),v,10*degree)
-
-%%
-
-unimodal_component = unimodalODF(ori(1))
-
-figure(2)
-plot(unimodal_component,'sigma','sections',12)
-
-%%
-
-plot(odf - 0.5 * unimodal_component,'sigma','sections',12)
-mtexColorMap blue2red
-colorbar(gcm)
-
-
-%%
-
-unimodal_component2 = unimodalODF(ori(2))
-
-figure(3)
-model_odf = 0.5 * unimodal_component + 0.15*unimodal_component2;
-plot(model_odf,'sigma','sections',12)
-
-
-%%
-
-figure(1)
-h = Miller(0,0,1,CS)
-plotPDF(odf - model_odf,Miller(0,0,1,CS))
-mtexColorMap blue2red
-colorbar(gcm)
-
-%%
-
-figure(2)
-r = vector3d('polar',35*degree,42*degree)
-h = Miller(0,0,1,CS)
-fibre_component = fibreODF(h,r,'halfwidth',10*degree)
-
-plot(fibre_component,'sections',12,'sigma')
-
-%%
-
-figure(2)
-model_odf = 0.4 * unimodal_component + ...
-  0.15 * unimodal_component2 + ...
-  0.25 * fibre_component;
-
-plot(model_odf,'sigma','sections',12)
-
-figure(1)
-plot(odf,'sigma','sections',12)
-
-%% other posible components
-%
-% uniform components, Bingham distributed components, FourierComponent
-
-
-%% Ghosts ....................
-
-% some sample ODF
-odf = SantaFe
-
-% plot it
-plot(odf)
-
-%%
-% simulate some pole figure data
-
-% crystal directions
-h = [Miller(1,0,0,odf.CS),Miller(1,1,0,odf.CS),Miller(1,1,1,odf.CS)];
-
-% compute pole figures
-pf = calcPoleFigure(odf,h);
+pf(pf_err.intensities>0.7) = []
 
 plot(pf)
 
-%%
+odf = calcODF(pf,'zero_range')
 
-odf_rec1 = calcODF(pf)
-odf_rec2 = calcODF(pf,'noGhostCorrection')
 
 %%
+% Once an ODF has been reconstructed it can be analyzed in many ways. Lets
+% finish this the script by simply plotting the ODF as sigma sections,
+% marking it prefered orientation
 
-figure(1)
-plotPDF(odf_rec1,h)
+plot(odf,'sigma','sections',12,'minmax')
 
-figure(2)
-plotPDF(odf_rec2,h)
+[maxValue,maxOri] = max(odf)
 
-figure(3)
-plotPDF(odf,h)
+annotate(maxOri,'label',char(maxOri),'backgroundcolor','w','interpreter','none')
+drawNow(gcm)
 
 %%
+% and plotting the c-axis pole figure
 
-figure(1)
-plotODF(odf_rec1,'contourf')
-mtexColorMap white2black
-
-figure(2)
-plotODF(odf_rec2,'contourf')
-mtexColorMap white2black
-
-%% Ghosts in Fourier space
-
-close all;
-plotFourier(odf,'linewidth',2)
-
-% keep plotting windows and add next plots
-hold all
-
-% without ghost correction:
-plotFourier(odf_rec2,'linewidth',2)
-
-% with ghost correction
-plotFourier(odf_rec1,'linewidth',2)
-
-legend({'true ODF','without ghost correction','with ghost correction'})
-% next plot command overwrites plot window
-hold off
-
-%% Options of calcODF
-%
-% * halfwidth  - of the kernel used for reconstruction
-% * resolution - how dense the kernels are placed
-% * zero_range - useful for sharp textures
-%
-%% Exercise
-%
-% Play around with data correction and reconstruction options to get better
-% RP values compare to the default values for the dubna example!
-%
-%%
+plotPDF(odf,Miller(0,0,0,1,CS))
