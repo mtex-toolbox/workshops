@@ -1,5 +1,5 @@
-%%                MTEX Workshop Belo Horizonte, 2015
-%                     
+%%             TEXMAT-CZM Texture School, Clausthal, 2015
+%
 %%                 ODF Analysis with MTEX
 %                Ralf Hielscher, TU Chemnitz
 %
