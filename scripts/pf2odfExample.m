@@ -68,12 +68,13 @@ mtexColorMap LaboTeX
 % different.
 
 figure(1)
-h = Miller({1,0,0},{0,1,0},{0,0,1},{1,1,0},{1,0,1},{0,1,1},{1,1,1},{1,1,-1},cs);
-plotPDF(odf1,h,'contourf')
+h1 = Miller({1,0,0},{0,1,0},{0,0,1},{1,1,0},{1,0,1},{0,1,1},cs);
+h2 = Miller({1,1,1},{1,1,-1},cs)
+plotPDF(odf1,h2,'contourf')
 mtexColorMap LaboTeX
 
 figure(2)
-plotPDF(odf2,h,'contourf')
+plotPDF(odf2,h2,'contourf')
 mtexColorMap LaboTeX
 
 %%
@@ -107,12 +108,15 @@ plot(odf,'sigma')
 % Let check what we obtain if the two distinguing pole figures as added
 
 % 1. step: simulate pole figure data for all crystal directions
-pf = calcPoleFigure(odf1,h)
+pf = calcPoleFigure(odf1,[h1,h2],'complete','upper')
 
 % 2. step: reconstruct an ODF 
 odf = calcODF(pf)
 
 plot(odf,'sigma')
+
+%%
+
 
 %%
 % We observe an almost perfect reconstruction of the first ODF.
@@ -149,7 +153,7 @@ hold off
 
 plotPDF(ori1,h,'MarkerSize',12,'antipodal')
 hold on
-plotPDF(ori2,'MarkerSize',8)
+plotPDF(ori2,h,'MarkerSize',8,'antipodal')
 hold off
 
 %%
@@ -189,7 +193,7 @@ hold off
 
 cs = crystalSymmetry('-1')
 
-odf1 = 2/3 * uniformODF(cs) + 1/3 * unimodalODF(orientation.id(cs),'halfwidth',30*degree)
+odf = 2/3 * uniformODF(cs) + 1/3 * unimodalODF(orientation.id(cs),'halfwidth',30*degree)
 
 plotPDF(odf,Miller(1,0,0,cs),'antipodal')
 
@@ -198,9 +202,9 @@ plotPDF(odf,Miller(1,0,0,cs),'antipodal')
 % functions. This does not change the ODF but only its representation
 
 
-odf1 = FourierODF(odf1,10)
+odf = FourierODF(odf,10)
 
-plotPDF(odf1,Miller(1,0,0,cs))
+plotPDF(odf,Miller(1,0,0,cs))
 
 %%
 % We may look at the coefficients of this expansion and observe how the

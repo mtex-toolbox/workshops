@@ -59,13 +59,13 @@ plotSection(ori.symmetrise,oS)
 % colorize the position of each orientation by the value of the ODF for
 % this orientation in multiples of the random distribution (mrd).
 
-plotSection(odf.ambiguity1)
+plot(ODF.ambiguity1)
 mtexColorbar
 mtexColorMap LaboTeX
 
 %%
-% Exercise 1: The ODF in the figure is quite sharp. How many mod does it
-% have and which crystal symmetry?
+% Exercise 1: The ODF in the figure is quite sharp. How many prefered
+% orientations does it have and which crystal symmetry?
 
 %%
 % One of the big problems of the representation of an ODF by phi2 sections
@@ -86,7 +86,7 @@ plot(odf,'sections',18)
 % representation of the orientation. Such secions through the orientation
 % space are called sigma sections.
 
-plotSection(odf.ambiguity1,'sigma')
+plot(ODF.ambiguity1,'sigma')
 
 %%
 % Sigma sections may be interpreted as follows: The superposition of all
