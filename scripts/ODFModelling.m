@@ -1,6 +1,7 @@
-%%             TEXMAT-CZM Texture School, Clausthal, 2015
+%                Chemnitz MTEX Workshop, 2016
 %
 %%                 ODF Modelling with MTEX
+%
 %                Ralf Hielscher, TU Chemnitz
 %
 %%

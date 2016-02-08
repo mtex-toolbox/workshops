@@ -1,3 +1,5 @@
+%                  Chemnitz MTEX Workshop, 2016
+%
 %%                     The Orientation Space
 %
 %                Ralf Hielscher, TU Chmenitz, Germany

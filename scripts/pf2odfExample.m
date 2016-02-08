@@ -1,3 +1,5 @@
+%                     Chemnitz MTEX Workshop, 2016
+%
 %%     Ambiguity of the Pole Figure to ODF Reconstruction Problem
 %
 %                Ralf Hielscher, TU Chmenitz, Germany

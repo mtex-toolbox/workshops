@@ -18,7 +18,7 @@
 \institute{Faculty of Mathematics,\\
 	Chemnitz University of Technology, Germany}
 
-\date{{\bf{\color{red}M}TEX} Workshop 2015}
+\date{{\bf{\color{red}M}TEX} Workshop 2016}
 
 
 \newcommand{\crystal}[5]{%
@@ -84,7 +84,7 @@
 
   \pause
 
-  For general vectors, \MTEX does not care about the coordinate system, but
+  For general vectors, MTEX does \textbf{not} care about the coordinate system, but
   works only with the coordinates.
 
   \begin{columns}
@@ -155,18 +155,17 @@ r = vector3d('theta',theta,'rho',rho)
 
   predefined vectors
 \begin{lstlisting}[style=input]
-r = xvector, r = yvector, r = zvector
+vector3d.X, vector3d.Y, vector3d.Z
 \end{lstlisting}
 
   \pause \medskip
 
-  combine vectors
+  lists of vectors
 \begin{lstlisting}[style=input]
-r = [xvector, yvector, vector3d(1,1,1)];
+r = vector3d([1 0 1],[0 1 1],[0 0 1]);
 \end{lstlisting}
-
+\vspace{-.3cm}
 \begin{onlyenv}<3>
-  \vspace{-.3cm}
 \begin{lstlisting}[style=output]
 r = /+vector3d+/ (show methods, plot)
   size: 1 x 3
@@ -176,21 +175,47 @@ r = /+vector3d+/ (show methods, plot)
   1 1 1
 \end{lstlisting}
 \end{onlyenv}
-
-  \pause \medskip
-
-  importing vectors
+\pause
 \begin{lstlisting}[style=input]
-r = loadVector3d('file','ColumnNames',{'x','y','z'})
+r = [vector3d.X, vector3d.Y, vector3d(1,1,1)];
 \end{lstlisting}
-\begin{onlyenv}<4>
   \vspace{-.3cm}
+\begin{onlyenv}<4>
+\begin{lstlisting}[style=output]
+r = /+vector3d+/ (show methods, plot)
+  size: 1 x 3
+  x y z
+  1 0 0
+  0 1 0
+  1 1 1
+\end{lstlisting}
+\end{onlyenv}
+\pause
+\begin{lstlisting}[style=input]
+r = vector3d.load('file','ColumnNames',{'x','y','z'})
+\end{lstlisting}
+  \vspace{-.3cm}
+\begin{onlyenv}<5>
 \begin{lstlisting}[style=output]
 r = /+vector3d+/ (show methods, plot)
   size: 200 x 1
 \end{lstlisting}
 \end{onlyenv}
-
+\pause
+\begin{lstlisting}[style=input]
+r = vector3d.rand(10,10)
+\end{lstlisting}
+  \vspace{-.3cm}
+\begin{onlyenv}<5>
+\begin{lstlisting}[style=output]
+r = /+vector3d+/ (show methods, plot)
+  size: 10 x 10
+\end{lstlisting}
+\end{onlyenv}
+\pause
+\begin{lstlisting}[style=input]
+r = plotS2Grid('resolution',1*degree)
+\end{lstlisting}
 \end{overlayarea}
 \end{frame}
 
@@ -201,7 +226,7 @@ r = /+vector3d+/ (show methods, plot)
 
   simple algebra
 \begin{lstlisting}[style=input]
-r = 2*xvector - yvector;
+r = 2*vector3d.X - vector3d.Y;
 \end{lstlisting}
 
   \pause \medskip
@@ -220,6 +245,7 @@ angle(v1,v2) % angle between two vectors
 \begin{lstlisting}[style=input]
 r.theta      % polar angle in radiant
 r.rho        % azimuth angle in radiant
+v.abs        % length of the vector
 r.x, r.y, r.z
 \end{lstlisting}
 
@@ -339,7 +365,7 @@ r = /+vector3d+/ (show methods, plot)
 
     replace the second vector by another vector
     \begin{lstlisting}[style=input]
-r(2) = yvector
+r(2) = vector3d.Y
     \end{lstlisting}
 
     \begin{onlyenv}<2>
@@ -504,7 +530,7 @@ color, background % text colors
   \onslide<1|handout:0>%
   Example
 \begin{lstlisting}[style=input]
-plot([xvector,yvector,zvector],
+plot([vector3d.X,vector3d.Y,vector3d.Z],
  'Backgroundcolor','w','Marker','s',
  'MarkerEdgeColor','w','labeled',
  'MarkerFaceColor','k')
@@ -571,7 +597,7 @@ eq(r, -r)
 
 The angle to an axis is always less then $90^{\degree}$
 \begin{lstlisting}[style=input]
-angle(r,-xvector) / degree
+angle(r,-vector.X) / degree
 \end{lstlisting}
 \begin{onlyenv}<3>
   \vspace{-0.3cm}
@@ -746,7 +772,7 @@ R = /+rotation+/ (show methods, plot)
   A rotation is uniquely defined by its rotation axis and its rotation angle
 
   \begin{lstlisting}[style=input]
-R = rotation('axis',xvector,'angle',45*degree)
+R = rotation('axis',vector3d.X,'angle',45*degree)
   \end{lstlisting}
 
   \pause
@@ -794,7 +820,7 @@ R = rotation('quaternion',a,b,c,d)
 
     rotate a vector
     \begin{lstlisting}[style=input]
-R = rotation('axis',xvector,'angle',-45*degree);
+R = rotation('axis',vector3d.X,'angle',-45*degree);
 R * vector3d(0,1,1)
     \end{lstlisting}
 
@@ -899,7 +925,7 @@ I = /+rotation+/ (show methods, plot)
 
   reflections
   \begin{lstlisting}[style=input]
-R = reflection(xvector+yvector)
+R = reflection(vector3d.X + vector3d.Y)
   \end{lstlisting}
   \begin{onlyenv}<2>
     \vspace{-0.3cm}
@@ -1307,7 +1333,7 @@ m = /+Miller+/ (show methods, plot)
 \begin{onlyenv}<4->
   A direction in the orthogonal coordinate system
   \begin{lstlisting}[style=input]
-m = Miller(xvector,CS)
+m = Miller(vector3d.X,CS)
 \end{lstlisting}
 \end{onlyenv}
 \end{overlayarea}
@@ -1701,7 +1727,7 @@ ans = /+Miller+/ (show methods, plot)
 
   change specimen coordinates
   \begin{lstlisting}[style=input]
-R  = rotation('axis',zvector,'angle',90*degree)
+R  = rotation('axis',vector3d.Z,'angle',90*degree)
 O2 = R * O1
 \end{lstlisting}
 \end{overlayarea}
@@ -1740,13 +1766,13 @@ plotPDF(ori,h,'contourf')
 
       specimen directions in crystal coordinates
       \begin{lstlisting}[style=input]
-plot(symmetrise(inv(ori)) * xvector)
-plot(symmetrise(inv(ori) * xvector))
+plot(symmetrise(inv(ori)) * vector3d.X)
+plot(symmetrise(inv(ori) * vector3d.X))
       \end{lstlisting}
       \pause
       \vspace{-0.3cm}
       \begin{lstlisting}[style=input]
-v = [xvector,yvector]
+v = [vector3d.X,vector3d.Y]
 plotIPDF(ori,v)
       \end{lstlisting}
       \pause
@@ -1903,7 +1929,7 @@ ans =
 volume portions
 \begin{lstlisting}[style=input]
 volume(ori,mean(ori),10*degree)
-fibreVolume(ori,Miller(1,0,0,ori.CS),xvector)
+fibreVolume(ori,Miller(1,0,0,ori.CS),vector3d.X)
 \end{lstlisting}
 
 \pause
