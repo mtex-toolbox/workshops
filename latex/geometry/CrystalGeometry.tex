@@ -160,27 +160,13 @@ vector3d.X, vector3d.Y, vector3d.Z
 
   \pause \medskip
 
-  lists of vectors
-\begin{lstlisting}[style=input]
-r = vector3d([1 0 1],[0 1 1],[0 0 1]);
-\end{lstlisting}
-\vspace{-.3cm}
-\begin{onlyenv}<3>
-\begin{lstlisting}[style=output]
-r = /+vector3d+/ (show methods, plot)
-  size: 1 x 3
-  x y z
-  1 0 0
-  0 1 0
-  1 1 1
-\end{lstlisting}
-\end{onlyenv}
-\pause
+  combine vectors
 \begin{lstlisting}[style=input]
 r = [vector3d.X, vector3d.Y, vector3d(1,1,1)];
 \end{lstlisting}
+
+\begin{onlyenv}<3>
   \vspace{-.3cm}
-\begin{onlyenv}<4>
 \begin{lstlisting}[style=output]
 r = /+vector3d+/ (show methods, plot)
   size: 1 x 3
@@ -190,32 +176,20 @@ r = /+vector3d+/ (show methods, plot)
   1 1 1
 \end{lstlisting}
 \end{onlyenv}
-\pause
+  \pause \medskip
+
+  importing vectors
 \begin{lstlisting}[style=input]
-r = vector3d.load('file','ColumnNames',{'x','y','z'})
+r = loadVector3d('file','ColumnNames',{'x','y','z'})
 \end{lstlisting}
+\begin{onlyenv}<4>
   \vspace{-.3cm}
-\begin{onlyenv}<5>
 \begin{lstlisting}[style=output]
 r = /+vector3d+/ (show methods, plot)
   size: 200 x 1
 \end{lstlisting}
 \end{onlyenv}
-\pause
-\begin{lstlisting}[style=input]
-r = vector3d.rand(10,10)
-\end{lstlisting}
-  \vspace{-.3cm}
-\begin{onlyenv}<5>
-\begin{lstlisting}[style=output]
-r = /+vector3d+/ (show methods, plot)
-  size: 10 x 10
-\end{lstlisting}
-\end{onlyenv}
-\pause
-\begin{lstlisting}[style=input]
-r = plotS2Grid('resolution',1*degree)
-\end{lstlisting}
+
 \end{overlayarea}
 \end{frame}
 
@@ -245,7 +219,6 @@ angle(v1,v2) % angle between two vectors
 \begin{lstlisting}[style=input]
 r.theta      % polar angle in radiant
 r.rho        % azimuth angle in radiant
-v.abs        % length of the vector
 r.x, r.y, r.z
 \end{lstlisting}
 
@@ -330,8 +303,9 @@ r = /+vector3d+/ (show methods, plot)
 
     \pause \medskip
 
-    \alert{The above techniques applies also to lists of
-    orientations, EBSD data, grains, boundary segments, etc.}
+    \alert{The above techniques applies also to lists of rotations,
+      orientations, tensors, EBSD data, grains, boundary segments, triple
+      points, etc.}
   \end{overlayarea}
 \end{frame}
 
@@ -432,11 +406,11 @@ r = /+vector3d+/ (show methods, plot)
   \frametitle{Plotting Vectors}
 
   \begin{columns}
-    \begin{column}{8.5cm}
+    \begin{column}{8.6cm}
       \begin{overlayarea}{\textwidth}{8cm}
 
       spherical projections: \texttt{earea, edist, eangle}
-      hemisphere: \texttt{upper, lower}
+      %hemisphere: \texttt{upper, lower}
 
       \begin{onlyenv}<1>
         \begin{lstlisting}[style=input]
@@ -455,7 +429,7 @@ plot(r,'projection','earea','upper')
 \pause \medskip
 
 combined plots
-
+\vspace{-0.1cm}
 \begin{lstlisting}[style=input]
 plot(vector3d(1,1,1),'upper');
 hold all
@@ -466,13 +440,18 @@ hold off
 
       \pause \medskip
 
-      data plots
-
+      scatter plots
+\vspace{-0.1cm}
       \begin{lstlisting}[style=input]
-r = randv(100)  % 100 random points
-plot(r,1:100)   % colored by number
-quiver(r,orth(r)) % a vector field
-      \end{lstlisting}
+v = vector3d.rand(1000)
+plot(v)
+\end{lstlisting}
+\pause
+contour plots
+\vspace{-0.1cm}
+      \begin{lstlisting}[style=input]
+plot(v,'contourf')
+\end{lstlisting}
 
     \end{overlayarea}
   \end{column}
@@ -486,11 +465,57 @@ quiver(r,orth(r)) % a vector field
 
       \includegraphics<3>[width=3.5cm]{pic/vectorCombined}
 
-      \includegraphics<4>[width=3.5cm]{pic/vectorColor}
+      \includegraphics<4>[width=3.5cm]{pic/vectorScatter}
 
-      \includegraphics<4>[width=3.5cm]{pic/quiver}
+      \includegraphics<5>[width=3.5cm]{pic/vectorContour}
     \end{overlayarea}
   \end{column}
+  \end{columns}
+
+\end{frame}
+
+
+\subsection*{data plots}
+
+\begin{frame}[fragile]
+  \frametitle{Data Plots}
+
+  \begin{columns}
+    \begin{column}{0.7\textwidth}
+      colorize vectors by value
+      \begin{lstlisting}[style=input]
+v = vector3d.rand(100)
+scatter(v,v.rho./degree,'upper',...
+        'grid','on','minmax')
+mtexColorbar('southoutside')
+mtexColorMap jet
+      \end{lstlisting}
+
+      \pause
+
+      colorize by RGB triples
+      \begin{lstlisting}[style=input]
+oM = ipdfHSVOrientationMapping
+scatter(v,oM.Miller2color(v))
+      \end{lstlisting}
+
+      \pause
+
+      visualize directions
+      \begin{lstlisting}[style=input]
+quiver(v,orth(v)) % a vector field
+      \end{lstlisting}
+
+    \end{column}
+    \begin{column}{0.3\textwidth}
+      \begin{overlayarea}{\textwidth}{8cm}
+        \includegraphics<1-2>[width=\textwidth]{pic/vectorColor}
+
+        \includegraphics<2>[width=\textwidth]{pic/vectorRGBColor}
+
+        \includegraphics<3>[width=\textwidth]{pic/quiver}
+    \end{overlayarea}
+    \end{column}
   \end{columns}
 
 \end{frame}
@@ -597,7 +622,7 @@ eq(r, -r)
 
 The angle to an axis is always less then $90^{\degree}$
 \begin{lstlisting}[style=input]
-angle(r,-vector.X) / degree
+angle(r,-vector3d.X) / degree
 \end{lstlisting}
 \begin{onlyenv}<3>
   \vspace{-0.3cm}
@@ -612,7 +637,7 @@ angle(r,-vector.X) / degree
 The option \textbf{antipodal} in a contour plot
 \begin{onlyenv}<4>
 \begin{lstlisting}[style=input]
-r = randv(1000)
+r = vector3d.rand(1000)
 plot(r,'contourf')
 \end{lstlisting}
 \end{onlyenv}
@@ -882,15 +907,15 @@ ans = /+rotation+/ (show methods, plot)
 
 plotting
 \begin{lstlisting}[style=input]
-R = randq(100)
-scatter(R) % Rodriguez space
+R = rotation.rand(100)
+scatter(R)      % axis angle plot
 \end{lstlisting}
 
 \end{overlayarea}
 \end{column}
 
 \begin{column}{3.7cm}
-  \includegraphics[width=3.7cm]{pic/rotationScatter}
+  \includegraphics[width=3.7cm]{pic/rotationScatter.png}
 \end{column}
 
 \end{columns}
@@ -1262,8 +1287,8 @@ CS = crystalSymmetry('321',[a b c],'X||a','Z||c*')
   \begin{lstlisting}[style=input]
 CS = crystalSymmetry('321',[a b c],'X||b','Z||c*')
 \end{lstlisting}
-The alignment of $\vec x$, $\vec y$, $\vec z$ is important as the Euler angles
-refer to them.
+\alert{The alignment of $\vec x$, $\vec y$, $\vec z$ is important as the Euler angles
+refer to them.}
 \end{onlyenv}
 
 \end{overlayarea}
@@ -1293,7 +1318,7 @@ refer to them.
     \begin{onlyenv}<2->
 \begin{lstlisting}[style=input]
 CS = crystalSymmetry('mmm',[1 2 3])
-m = Miller(1,1,1,CS,'uvw')
+m  = Miller(-1,1,1,CS,'uvw')
 \end{lstlisting}
 \end{onlyenv}
 \begin{onlyenv}<2>
@@ -1301,7 +1326,7 @@ m = Miller(1,1,1,CS,'uvw')
 m = /+Miller+/ (show methods, plot)
   size: 1 x 1
   symmetry: mmm
-  u 1
+  u -1
   v 1
   w 1
 \end{lstlisting}
@@ -1310,19 +1335,19 @@ m = /+Miller+/ (show methods, plot)
     \begin{onlyenv}<3->
 A direction in reciprocal coordinates
 \begin{equation*}
-  \vec r = h \cdot \vec a^{*}+ k \cdot \vec b^{*} + \ell \cdot \vec c^{*}.
+  \vec n = h \cdot \vec a^{*}+ k \cdot \vec b^{*} + \ell \cdot \vec c^{*}.
 \end{equation*}
 \begin{lstlisting}[style=input]
-m = Miller(1,1,1,CS,'hkl')
+n  = Miller(-1,1,1,CS,'hkl')
 \end{lstlisting}
 \end{onlyenv}
 \begin{onlyenv}<3>
   \vspace{-.3cm}
   \begin{lstlisting}[style=output]
-m = /+Miller+/ (show methods, plot)
+n = /+Miller+/ (show methods, plot)
   size: 1 x 1
   symmetry: mmm
-  h 1
+  h -1
   k 1
   l 1
 \end{lstlisting}
@@ -1357,13 +1382,13 @@ plot(m,'labeled')
         \begin{onlyenv}<3->%
           \begin{lstlisting}[style=input]
 hold all
-plot(m,'labeled')
+plot(n,'labeled')
           \end{lstlisting}%
         \end{onlyenv}%
         \vspace{-0.25cm}
         \begin{onlyenv}<3->%
           \begin{lstlisting}[style=input]
-plot(m,'plane')
+plot(n,'plane')
           \end{lstlisting}
         \end{onlyenv}
           \end{overlayarea}
@@ -1380,12 +1405,21 @@ plot(m,'plane')
   \vspace{-.3cm}
 
   \begin{center}
-    \includegraphics[width=4cm]{pic/hkl}
-    \includegraphics[width=4cm]{pic/uvtw}
-    \includegraphics[width=4cm]{pic/uvw}
+    \begin{minipage}[t]{0.3\linewidth}
+       \vspace{0pt}
+      \includegraphics[width=\textwidth]{pic/hkl}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}
+       \vspace{0pt}
+      \includegraphics[width=\textwidth]{pic/uvtw}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.34\linewidth}
+       \vspace{0pt}
+      \includegraphics[width=\textwidth]{pic/uvw}
+    \end{minipage}
   \end{center}
-
-  \vspace{-.5cm}
 
   define lists of crystal directions
   \vspace{-.2cm}
@@ -1416,6 +1450,7 @@ plot(m,'symmetrised','labeled')
      \begin{column}{8.6cm}
          \begin{overlayarea}{\textwidth}{8cm}
            Find all symmetrically equivalent directions
+           \vspace{-0.1cm}
            \begin{lstlisting}[style=input]
 CS = loadCIF('quartz')
 m = Miller(1,1,-2,1,CS,'hkil')
@@ -1438,7 +1473,9 @@ ans = /+Miller+/ (show methods, plot)
         \pause
         \medskip
 
-        Change from reciprocal coordinate system to $\vec a$, $\vec b$, $\vec c$
+        Change from reciprocal coordinate system to $\vec a$, $\vec b$,
+        $\vec c$
+        \vspace{-0.1cm}
   \begin{lstlisting}[style=input]
 m.dispStyle = 'UVTW'
   \end{lstlisting}
@@ -1478,6 +1515,7 @@ ans = /+Miller+/ (show methods, plot)
         \medskip
 
         Access the coordinates and properties
+        \vspace{-0.1cm}
   \begin{lstlisting}[style=input]
 m.U, m.hkl, m.uvw, m.UVTW
 m.dspacing % d-spacing of planes
@@ -1486,7 +1524,8 @@ m.dspacing % d-spacing of planes
         \pause
         \medskip
 
-angle modulo symmetry
+        angle modulo symmetry
+        \vspace{-0.1cm}
         \begin{lstlisting}[style=input]
 angle(m1,m2) / degree
 \end{lstlisting}
@@ -1744,21 +1783,21 @@ O2 = R * O1
     \begin{column}{8.5cm}
       Lattice planes in specimen coordinates
       \begin{lstlisting}[style=input]
-h = Miller({1 0 0},{0 1 0},ori.CS)
-plot(symmetrise(ori) * h(1))
-plot(ori * symmetrise(h(1)))
+h = Miller({1 0 0}, {0 1 0}, O.CS)
+plot(symmetrise(O) * h(1))
+plot(O * symmetrise(h(1)))
       \end{lstlisting}
 
       \pause
       \medskip
 
       \begin{lstlisting}[style=input]
-plotPDF(ori,h)
+plotPDF(O,h)
       \end{lstlisting}
       \pause
       \vspace{-0.3cm}
       \begin{lstlisting}[style=input]
-plotPDF(ori,h,'contourf')
+plotPDF(O,h,'contourf')
       \end{lstlisting}
 
       \pause
@@ -1766,19 +1805,19 @@ plotPDF(ori,h,'contourf')
 
       specimen directions in crystal coordinates
       \begin{lstlisting}[style=input]
-plot(symmetrise(inv(ori)) * vector3d.X)
-plot(symmetrise(inv(ori) * vector3d.X))
+plot(symmetrise(inv(O)) * vector3d.X)
+plot(symmetrise(inv(O) * vector3d.X))
       \end{lstlisting}
       \pause
       \vspace{-0.3cm}
       \begin{lstlisting}[style=input]
-v = [vector3d.X,vector3d.Y]
-plotIPDF(ori,v)
+v = [vector3d.X, vector3d.Y]
+plotIPDF(O,v)
       \end{lstlisting}
       \pause
       \vspace{-0.3cm}
       \begin{lstlisting}[style=input]
-plotIPDF(ori,v,'contourf')
+plotIPDF(O,v,'contourf')
       \end{lstlisting}
 
 
@@ -1836,31 +1875,98 @@ plotIPDF(ori,v,'contourf')
 
   \begin{onlyenv}<1>
     \begin{lstlisting}[style=input]
-plotSection(ori,'phi2',(0:30:150)*degree)
+plotSection(O,'phi2',(0:30:150)*degree)
     \end{lstlisting}
-
     \includegraphics[width=\textwidth]{pic/odfOri}
   \end{onlyenv}
 
   \begin{onlyenv}<2>
     \begin{lstlisting}[style=input]
-plotSection(ori,'phi2',(0:30:150)*degree,'contourf',...
-        'halfwidth',10*degree)
+plotSection(O,'phi2',(0:30:150)*degree,...
+            'contourf','halfwidth',10*degree)
     \end{lstlisting}
-
     \includegraphics[width=0.95\textwidth]{pic/odfOriSmooth}
   \end{onlyenv}
 
     \begin{onlyenv}<3>
     \begin{lstlisting}[style=input]
-plotSection(ori,'sigma',(0:30:150)*degree,'contourf')
+plotSection(O,'sigma',(0:30:150)*degree,'contourf')
     \end{lstlisting}
     \vspace{-0.3cm}
     \begin{center}
       \includegraphics[width=0.9\textwidth]{pic/odfOriSmoothSigma}
     \end{center}
-
   \end{onlyenv}
+
+  \begin{onlyenv}<4>
+    \begin{lstlisting}[style=input]
+plotSection(O,'AxisAngle',(10:15:115)*degree,...
+            'contourf')
+    \end{lstlisting}
+    \vspace{-0.3cm}
+    \begin{center}
+      \includegraphics[width=\textwidth]{pic/odfOriSmoothAxisAngle}
+    \end{center}
+  \end{onlyenv}
+
+\end{frame}
+
+\subsection*{The Orientation Space}
+
+\begin{frame}[fragile]
+  \frametitle{The Orientation Space}
+
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+
+      \begin{lstlisting}[style=input]
+plot(orientationRegion)
+      \end{lstlisting}
+
+      \pause
+
+      \vspace{-0.1cm}
+      \begin{lstlisting}[style=input]
+cs = crystalSymmetry('mmm')
+oR = cs.fundamentalRegion
+plot(oR,'color','r')
+\end{lstlisting}
+
+\pause
+
+\vspace{-0.1cm}
+      \begin{lstlisting}[style=input]
+cs = crystalSymmetry('321')
+oR = cs.fundamentalRegion
+plot(oR,'color','r')
+\end{lstlisting}
+
+\pause
+
+\vspace{-0.1cm}
+      \begin{lstlisting}[style=input]
+cs = crystalSymmetry('432')
+oR = cs.fundamentalRegion
+plot(oR,'color','r')
+      \end{lstlisting}
+
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \only<1>{\includegraphics[width=\textwidth]{pic/oR1}}
+      \only<2>{\includegraphics[width=\textwidth]{pic/oRmmm}}
+      \only<3>{\includegraphics[width=\textwidth]{pic/oR321}}
+      \only<4->{\includegraphics[width=\textwidth]{pic/oR432}}
+    \end{column}
+  \end{columns}
+
+  \pause
+
+  \begin{lstlisting}[style=input]
+oR.V, oR.N, oR.checkInside, oR.axisSector(omega),
+oR.maxAngle(axes), oR.minAngle,
+oR.calcAxisDistribution, oR.calcAngleDistribution
+  \end{lstlisting}
+
 
 \end{frame}
 
@@ -1891,10 +1997,10 @@ plotSection(ori,'sigma',(0:30:150)*degree,'contourf')
 
 mean orientation
   \begin{lstlisting}[style=input]
-mean(ori)
+mean(O)
   \end{lstlisting}
 
-  \begin{onlyenv}<2>
+  \begin{onlyenv}<1>
     \begin{lstlisting}[style=output]
 ans = /+orientation+/ (show methods, plot)
   size: 1 x 1
@@ -1912,10 +2018,10 @@ ans = /+orientation+/ (show methods, plot)
 
   mean orientation spread
   \begin{lstlisting}[style=input]
-mean(angle(ori,mean(ori)))./degree
+mean(angle(O,mean(O)))./degree
   \end{lstlisting}
 
-  \begin{onlyenv}<3>
+  \begin{onlyenv}<2>
     \begin{lstlisting}[style=output]
 ans =
 
@@ -1928,8 +2034,8 @@ ans =
 
 volume portions
 \begin{lstlisting}[style=input]
-volume(ori,mean(ori),10*degree)
-fibreVolume(ori,Miller(1,0,0,ori.CS),vector3d.X)
+volume(O,mean(O),10*degree)
+fibreVolume(O,Miller(1,0,0,O.CS),vector3d.X,5*degree)
 \end{lstlisting}
 
 \pause
@@ -1937,13 +2043,13 @@ fibreVolume(ori,Miller(1,0,0,ori.CS),vector3d.X)
 
 export to ASCII file
 \begin{lstlisting}[style=input]
-export(ori,'file.txt','bunge','degree')
+export(O,'file.txt','bunge','degree')
 \end{lstlisting}
 
 \end{frame}
 
 
-
+\end{document}
 
 \section{Misorientations}
 
