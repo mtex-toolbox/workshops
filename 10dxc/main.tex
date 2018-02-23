@@ -1,0 +1,153 @@
+% presentation
+\documentclass{beamer}
+
+% handout
+%\documentclass[handout]{beamer}
+
+%\includeonly{preface}
+
+\mode<beamer>{
+  \usetheme{Frankfurt}
+  \mode<presentation>
+}
+
+\mode<handout>{
+  \usepackage{pgfpages}
+  \pgfpagesuselayout{2 on 1}[a4paper]
+}
+
+\usepackage{tikz}
+\usetikzlibrary{mindmap,trees}
+
+% other themes
+%\usepackage{beamerthemeWarsaw}
+%\usepackage{beamerthemeBoadilla}
+%\usepackage[compress]{beamerthemeSingapore}
+
+
+% layout settings
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left = 4mm}
+\setbeamersize{text margin right = 4mm}
+\setbeamercovered{transparent}
+
+% other packages
+%\usetheme[Boadilla]{}
+\usepackage{calc}
+\usepackage[ruled]{algorithm2e}
+\usepackage{stmaryrd}
+%
+
+%\usepackage{tabularx,booktabs}
+\usepackage{booktabs}
+%\useinnertheme{rounded}
+\usecolortheme{dolphin}
+\usecolortheme{rose}
+%\setbeamercolor{title}{fg=black,bg=white!80!black}
+\setbeamercolor{title}{fg=black,bg=white!80!blue}
+\usefonttheme[onlysmall]{structurebold}
+
+
+\usepackage{colortbl,fancyvrb}
+
+\usepackage{listings}
+
+
+\definecolor{lightgray}{gray}{0.9}
+\definecolor{lightergray}{gray}{0.92}
+\definecolor{mygreen}{rgb}{0.1,0.9,0.3}
+
+\definecolor{mydarkgray}{rgb}{0.25,0.3,0.25}
+\lstset{
+  language=Matlab,
+  escapeinside="",
+  keywordstyle=\color{black},
+  numbersep=5pt,
+	framexleftmargin=5pt,
+	framexrightmargin=5pt,
+	framextopmargin=10pt,
+	framexbottommargin=10pt,
+  moredelim=[is][\color{gray}\itshape]{/*}{*/},
+	moredelim=[is][\alert]{/+}{+/},
+  fancyvrb=true
+}
+
+
+
+\lstdefinestyle{input}{
+	frame=leftline,
+	framerule=2pt,
+	rulecolor=\color{mygreen},
+	backgroundcolor=\color{lightgray},
+	basicstyle=\smaller\color{black}}
+
+\lstdefinestyle{output}{
+	frame=leftline,
+	framerule=2pt,
+	rulecolor=\color{gray},
+	backgroundcolor=\color{lightergray},
+	basicstyle=\scriptsize\ttfamily\color{darkgray},
+	emph={ODF,Miller,PoleFigure,Symmetry},emphstyle={\color{blue}\underbar}}
+
+
+
+\newtheorem{Remark}{Remark}
+\newtheorem{Proposition}{Proposition}
+\renewcommand{\O}{\mathcal O}
+\newcommand{\PGroup}{S_\text{Point}}
+\newcommand{\Y}{\mathcal Y}
+\renewcommand{\angle}{\measuredangle}
+\newcommand{\mtex}{{\large \bf{\color{red}M}TEX\,}}%
+\newcommand{\MTEX}{{\bf {\color{red}M}TEX\,}}%
+\newcommand{\degree}{\ensuremath{^\circ}}   % Gradzeichen
+%\newcommand{\degree}{^\circ}
+\newcounter{exercisescounter}
+\newenvironment{Exercise}{\refstepcounter{exercisescounter}%
+  \begin{block}{Exercise \arabic{exercisescounter}}}
+  {\end{block}}
+
+
+\author{R. Hielscher}
+
+\title{{\Huge \bf{\color{red}M}TEX}}
+\subtitle{A Texture Calculation Toolbox}
+%\titlegraphic{\includegraphics[width=1.5cm]{pic/tu_logo}}
+
+\institute{Faculty of Mathematics,\\
+	Chemnitz University of Technology, Germany}
+
+\date{Prag, 30.5. -- 2.6. 2011}
+
+
+\begin{document}
+
+\include{preface}
+
+%\include{matlab}
+
+\include{geometry}
+
+%\include{modelODF}
+
+\include{ODFAnalysis}
+
+\include{PoleFigure}
+
+\include{EBSD}
+
+\include{grains}
+
+\include{tensors}
+
+\include{plotting}
+
+\include{about}
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: .
+%%% End:

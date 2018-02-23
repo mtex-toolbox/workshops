@@ -1,0 +1,125 @@
+
+\frame[plain]{\titlepage}
+
+\mode<handout>{
+ \frame[plain]{}
+}
+
+\section{MTEX}
+
+\begin{frame}
+  \frametitle{What is \MTEX?}
+
+  \begin{columns}
+
+
+
+    \begin{column}{7.5cm}
+      \begin{center}
+        \includegraphics[width = 7.5cm]{latex_pic/mtex_concept}
+      \end{center}
+    \end{column}
+
+    \begin{column}{5cm}
+      \begin{itemize}
+      \item MATLAB toolbox
+      \item \alert{$>500$} functions
+      \item well documented
+      \item \alert{$>20$} data formats
+      \item publication ready plots
+      \item batch processing
+      \item \alert{free!}
+      \end{itemize}
+    \end{column}
+
+  \end{columns}
+
+
+%   \frametitle{\MTEX is a MATLAB Toolbox Designed To}
+
+%   \begin{columns}
+%     \begin{column}{10cm}
+
+%       \begin{itemize}
+%       \item analyze and visualize crystallographic geometries
+%       \item analyze and visualize diffraction data
+%       \item analyze and visualize single orientation data
+%       \item calculate with model ODFs
+%       \item recover orientation density functions (ODFs)
+%         \begin{itemize}
+%         \item from diffraction pole figures
+%         \item from EBSD data
+%         \end{itemize}
+%       \item calculate texture characteristics like\\
+%         volume, Fourier coefficients, entropy, texture index
+%       \item create publication ready plots of \\
+%         pole figures, inverse pole figures and ODF's
+%       \end{itemize}
+%     \end{column}
+%   \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Time Schedule}
+
+ \renewcommand{\arraystretch}{1.25}
+ \begin{center}
+  \begin{tabular}{rl}
+  \rowcolor{blue!10} 8:30  & MATLAB Basics and Crystal Geometry\\
+%  9:00  & Exercises\\
+	\rowcolor{blue!10} 9:30  & Model ODFs and ODF Analysis\\
+%  10:00 & Exercises\\[1ex]
+  \hline \rowcolor{green!10} 10:30 & \textit{Coffee Break}\\\hline
+
+  \rowcolor{blue!10}   11:00 & Pole Figure Analysis\\
+%  11:45 & Exercises\\[1ex]
+  \hline  \rowcolor{green!10} 12:30 &\textit{Lunch Break}\\\hline
+
+   \rowcolor{blue!10} 13:30 & EBSD Data Analysis\\
+%  14:15 & Exercises\\[1ex]
+   \hline \rowcolor{green!10} 14:45 & \textit{Coffee Break}\\\hline
+
+   \rowcolor{blue!10}  15:15 & Generating Plots \\
+  \rowcolor{blue!10} 15:30 & Free Work
+  \end{tabular}
+  \end{center}
+
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{The Design of \MTEX}
+
+%   \begin{columns}
+%     \begin{column}[t]{4.5cm}
+%       \includegraphics[width = 5mm]{pic/matlab}
+%       MATLAB  components:\\
+%       \medskip
+
+%       \mtex
+%       \begin{itemize}
+%       \item crystal geometry tools
+%       \item pole figure tools
+%       \item EBSD tools
+%       \item ODF tools
+%       \item plotting tools
+%       \end{itemize}
+%     \end{column}
+%     \begin{column}[t]{4.5cm}
+%       C Libraries:
+%       \begin{itemize}
+%       \item FFT - library\\
+%         \includegraphics[height = 5mm]{pic/fftw-logo-med} 3.1
+%       \item spherical FFT
+%         \includegraphics[height = 5mm]{pic/nfft_logo} 3.0
+%       \item \mtex\ C - library\\
+%         pf2odf.exe, odf2pf.exe, odf2fc.exe, fc2odf.exe
+%       \end{itemize}
+%     \end{column}
+%   \end{columns}
+% \end{frame}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

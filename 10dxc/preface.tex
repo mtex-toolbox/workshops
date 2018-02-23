@@ -1,0 +1,173 @@
+
+\frame[plain]{\titlepage}
+
+\mode<handout>{
+ \frame[plain]{}
+}
+
+\section{MTEX}
+
+\begin{frame}
+  \frametitle{What is \MTEX?}
+
+  \begin{columns}
+
+    \begin{column}{7.5cm}
+      \begin{center}
+
+        \begin{tikzpicture}[scale = 0.7,transform shape]
+          \definecolor{myblue}{HTML}{92dcec}
+
+          \path[mindmap, minimum size=2cm, concept color=gray!50!]
+          node[concept] {\Huge \MTEX}
+          child[grow = 0, concept color=gray!50]
+          { node at (0:-1) [concept] {\large \bf ODF Modelling}}
+          child[grow = 60, concept color=gray!50]
+          { node at (60:-1)[concept](pf) {\large \bf Pole Figure Analysis}}
+          child[grow = 120, concept color=gray!50]
+          { node  at (120:-1) [concept](pf) {\large \bf EBSD Data Analysis}}
+          child[grow = 180, concept color=gray!50]
+          { node at (180:-1)[concept](pf) {\large \bf ODF \\ Estimation}}
+          child[grow = 240, concept color=gray!50]
+          { node at (240:-1) [concept](pf) {\large \bf Plotting}}
+          child[grow = 300, concept color=gray!50]
+          { node at (300:-1) [concept](pf) {\large \bf Texture Characteristics}};
+        \end{tikzpicture}
+      \end{center}
+    \end{column}
+
+    \begin{column}{5cm}
+      \begin{itemize}
+      \item MATLAB toolbox
+      \item \alert{$>500$} functions
+      \item well documented
+      \item \alert{$>20$} data formats
+      \item publication ready plots
+      \item batch processing
+      \item \alert{free!}
+      \end{itemize}
+    \end{column}
+
+  \end{columns}
+
+
+%   \frametitle{\MTEX is a MATLAB Toolbox Designed To}
+
+%   \begin{columns}
+%     \begin{column}{10cm}
+
+%       \begin{itemize}
+%       \item analyze and visualize crystallographic geometries
+%       \item analyze and visualize diffraction data
+%       \item analyze and visualize single orientation data
+%       \item calculate with model ODFs
+%       \item recover orientation density functions (ODFs)
+%         \begin{itemize}
+%         \item from diffraction pole figures
+%         \item from EBSD data
+%         \end{itemize}
+%       \item calculate texture characteristics like\\
+%         volume, Fourier coefficients, entropy, texture index
+%       \item create publication ready plots of \\
+%         pole figures, inverse pole figures and ODF's
+%       \end{itemize}
+%     \end{column}
+%   \end{columns}
+\end{frame}
+
+
+\begin{frame}{What is \MTEX: some numbers and facts}
+
+
+\begin{block}{}
+Developed since 2007 with more than
+%\mindmap?
+\begin{itemize}
+\item 25000 lines of matlab code in over 900 m-files
+\item 15000 lines comments
+\item 750 help pages
+\item 20 Pole Figure and 5 EBSD Data formats
+\end{itemize}
+\end{block}
+
+\begin{block}{}
+  \vspace*{0.25em}
+  \hspace{1.25em}
+  \begin{tabular}{lll}
+    version & release date & downloads \\
+    \hline
+    mtex 1.0 & June 2008 & $900$ \\
+    mtex 2.0 & October 2009 & $800$ \\
+    mtex 3.0 & August 2010 & $650$\\
+    mtex 3.2 & May 2011 &
+  \end{tabular}
+\end{block}
+
+
+\end{frame}
+
+
+
+% \begin{frame}
+%   \frametitle{Time Schedule}
+
+%  \renewcommand{\arraystretch}{1.25}
+%  \begin{center}
+%   \begin{tabular}{rl}
+%   \rowcolor{blue!10} 8:30  & MATLAB Basics and Crystal Geometry\\
+% %  9:00  & Exercises\\
+% 	\rowcolor{blue!10} 9:30  & Model ODFs and ODF Analysis\\
+% %  10:00 & Exercises\\[1ex]
+%   \hline \rowcolor{green!10} 10:30 & \textit{Coffee Break}\\\hline
+
+%   \rowcolor{blue!10}   11:00 & Pole Figure Analysis\\
+% %  11:45 & Exercises\\[1ex]
+%   \hline  \rowcolor{green!10} 12:30 &\textit{Lunch Break}\\\hline
+
+%    \rowcolor{blue!10} 13:30 & EBSD Data Analysis\\
+% %  14:15 & Exercises\\[1ex]
+%    \hline \rowcolor{green!10} 14:45 & \textit{Coffee Break}\\\hline
+
+%    \rowcolor{blue!10}  15:15 & Generating Plots \\
+%   \rowcolor{blue!10} 15:30 & Free Work
+%   \end{tabular}
+%   \end{center}
+
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{The Design of \MTEX}
+
+%   \begin{columns}
+%     \begin{column}[t]{4.5cm}
+%       \includegraphics[width = 5mm]{pic/matlab}
+%       MATLAB  components:\\
+%       \medskip
+
+%       \mtex
+%       \begin{itemize}
+%       \item crystal geometry tools
+%       \item pole figure tools
+%       \item EBSD tools
+%       \item ODF tools
+%       \item plotting tools
+%       \end{itemize}
+%     \end{column}
+%     \begin{column}[t]{4.5cm}
+%       C Libraries:
+%       \begin{itemize}
+%       \item FFT - library\\
+%         \includegraphics[height = 5mm]{pic/fftw-logo-med} 3.1
+%       \item spherical FFT
+%         \includegraphics[height = 5mm]{pic/nfft_logo} 3.0
+%       \item \mtex\ C - library\\
+%         pf2odf.exe, odf2pf.exe, odf2fc.exe, fc2odf.exe
+%       \end{itemize}
+%     \end{column}
+%   \end{columns}
+% \end{frame}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

@@ -1,0 +1,139 @@
+% presentation
+\documentclass{beamer}
+
+% handout
+%\documentclass[handout]{beamer}
+
+%\includeonly{preface}
+
+\mode<beamer>{
+  \usetheme{Frankfurt}
+  \mode<presentation>
+}
+
+\mode<handout>{
+  \usepackage{pgfpages}
+  \pgfpagesuselayout{2 on 1}[a4paper]
+}
+
+
+%\usetikzlibrary{mindmap,trees}
+
+% other themes
+%\usepackage{beamerthemeWarsaw}
+%\usepackage{beamerthemeBoadilla}
+%\usepackage[compress]{beamerthemeSingapore}
+
+
+% layout settings
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left = 4mm}
+\setbeamersize{text margin right = 4mm}
+\setbeamercovered{transparent}
+
+% other packages
+%\usetheme[Boadilla]{}
+\usepackage{calc}
+\usepackage[ruled]{algorithm2e}
+\usepackage{stmaryrd}
+%
+
+%\usepackage{tabularx,booktabs}
+\usepackage{booktabs}
+%\useinnertheme{rounded}
+\usecolortheme{dolphin}
+\usecolortheme{rose}
+%\setbeamercolor{title}{fg=black,bg=white!80!black}
+\setbeamercolor{title}{fg=black,bg=white!80!blue}
+\usefonttheme[onlysmall]{structurebold}
+
+
+\usepackage{colortbl}
+
+\usepackage{listings}
+
+
+\definecolor{lightgray}{gray}{0.9} \lstset{backgroundcolor=\color{lightgray}}
+\lstdefinelanguage{rock}{morekeywords=
+  {mean,std,hist,save,load,rotate,min,max,getbg,getdata,getMiller,getCS,getSS,get,
+    getr,scale,union,delete,setdata,getTheta,degree,kernel,gethw,getparameter,bandwidth,
+    symmetry,Miller,Miller2quat,uniformODF,unimodalODF,fibreODF,xvector,yvector,zvector,
+    loadPoleFigure,PoleFigure,plot,plotpdf,plotipdf,calcODF,vector3d,sph2vec,cross,norm,
+    dot,sum,vec2sph,symeq,vec2Miller,savefigure,plotDiff,calcerror,
+    quaternion,axis2quat,euler2quat,idquaternion,rotangle,rotaxis,quat2rodriguez,
+    quat2euler,dist,Laue,length,angle,add,subGrid,refine,GridLength,getResolution,getRho,
+    polar,S2Grid,santafee,mix2,modalorientation,fourier,textureindex,entropy,volume,
+    fibrevolume,uiimport,scatter,cif2symmetry,symmetriceVec,remove_outlier,
+    simulatePoleFigure,SimulateEBSD,grainfun,plot2all,hold,getFundamentalRegion,symvec,
+    FourierODF,find_outlier,bar,copyproperty,plotspatial,hasholes,principalcomponents,
+    hullprincipalcomponents,loadEBSD,segment2d,plotboundaries,plotodf,plotspatial,area,
+    aspectratio,grain,grainfun,grainsize,get,plotgrains,plotellipse,plotsubfractions,
+    hasholes,hassubfraction,hullarea,hullcentroid,hullperimeter,centroid,borderlength,
+    deltaarea,equivalentperimeter,perimeter,joincount,link,misorientation,neighbours,
+    paris,shapefactor,toebsd},
+  sensitive=false, morestring=[b][\emph]', moredelim=[is][\alert]{/+}{+/},
+  morecomment=[s][\emph]{<options}{>}, morecomment=[l]{\%},
+  commentstyle=\color{darkgray} }
+
+\lstset{language=rock}
+\lstset{emph={symmetries,concentration},emphstyle={\bf \color{white!25!black}}}
+
+
+\newtheorem{Remark}{Remark}
+\newtheorem{Proposition}{Proposition}
+\renewcommand{\O}{\mathcal O}
+\newcommand{\PGroup}{S_\text{Point}}
+\newcommand{\Y}{\mathcal Y}
+\renewcommand{\angle}{\measuredangle}
+\newcommand{\mtex}{{\large \bf{\color{red}M}TEX\,}}%
+\newcommand{\MTEX}{{\bf {\color{red}M}TEX\,}}%
+\newcommand{\degree}{\ensuremath{^\circ}}   % Gradzeichen
+%\newcommand{\degree}{^\circ}
+\newcounter{exercisescounter}
+\newenvironment{Exercise}{\refstepcounter{exercisescounter}%
+  \begin{block}{Exercise \arabic{exercisescounter}}}
+  {\end{block}}
+
+
+\author{R. Hielscher\inst{1} \and H. Schaeben\inst{2} \and F. Bachmann\inst{2}}
+
+\title{{\Huge \bf{\color{red}M}TEX}}
+\subtitle{A Texture Calculation Toolbox}
+%\titlegraphic{\includegraphics[width=1.5cm]{pic/tu_logo}}
+
+\institute{\inst{1}Helmholtz Center Munich, Germany
+  \and
+  \inst{2}Geoscience Mathematics and Informatics,\\
+  Freiberg University of Mining and Technology, Germany}
+
+\date{ITAP 3, 22.09.2009}
+
+
+\begin{document}
+
+\include{preface}
+
+\include{matlab}
+
+\include{geometry}
+
+\include{modelODF}
+
+\include{ODFAnalysis}
+
+\include{PoleFigure}
+
+\include{EBSD}
+
+\include{plotting}
+
+\include{about}
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: .
+%%% End:

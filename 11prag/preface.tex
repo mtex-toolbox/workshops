@@ -1,0 +1,76 @@
+
+\frame[plain]{\titlepage}
+
+\mode<handout>{
+ \frame[plain]{}
+}
+
+\section{MTEX}
+
+
+\begin{frame}{What is \MTEX: some numbers and facts}
+
+
+\begin{block}{}
+
+%\mindmap?
+\begin{itemize}
+\item developed since 2007
+\item 25000 lines of matlab code in over 900 m-files
+\item 15000 lines comments
+\item 750 help pages
+\item 5 reference papers
+\item support for 20 pole figure and 5 EBSD data formats
+\end{itemize}
+\end{block}
+
+\begin{block}{}
+  \vspace*{0.25em}
+  \hspace{1.25em}
+  \begin{tabular}{lll}
+    version & release date & downloads \\
+    \toprule
+    mtex 1.0 & June 2008 & $900$ \\
+    mtex 2.0 & October 2009 & $800$ \\
+    mtex 3.0 & August 2010 & $650$\\
+    mtex 3.2 & May 2011 &
+  \end{tabular}
+\end{block}
+
+
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Feature Overview}
+
+ \renewcommand{\arraystretch}{1.25}
+ \begin{center}
+
+  \begin{tabular}{p{3cm} p{8cm}}
+    Classes & Methods \\
+    \toprule
+    \rowcolor{blue!10}
+    Crystal Geometry & crystal symmetries, CIF files, Miller indices, Euler angles, orientations,
+    missorientations\\
+    ODF & model ODFs, pole figures, inverse pole figures, volume portions,
+    modal orientations, texture index\\
+    \rowcolor{blue!10}
+    Pole Figures & outliers, ODF estimation, error analysis\\
+    EBSD  & orientation statistics, ODF estimation, grain detection,
+    missorientation analysis\\
+    \rowcolor{blue!10}
+    Grains & volume, surface, neighbors, mean orientation, missorientation\\
+    Tensors& elasticity tensors, Young's
+    modulus, shear modulus, Poisson's ratio, linear compressibility,
+    wave velocities
+  \end{tabular}
+  \end{center}
+ \end{frame}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
