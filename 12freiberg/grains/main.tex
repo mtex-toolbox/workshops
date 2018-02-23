@@ -1,0 +1,145 @@
+% presentation
+\documentclass{beamer}
+
+% handout
+%\documentclass[handout]{beamer}
+
+%\usepackage[3D]{movie15}
+%\includeonly{grains}
+
+\mode<beamer>{
+  \usetheme{Frankfurt}
+  \mode<presentation>
+}
+
+\mode<handout>{
+  \usepackage{pgfpages}
+  \pgfpagesuselayout{2 on 1}[a4paper]
+}
+
+\usepackage{tikz}
+\usetikzlibrary{mindmap,trees}
+
+
+% other themes
+%\usepackage{beamerthemeWarsaw}
+%\usepackage{beamerthemeBoadilla}
+%\usepackage[compress]{beamerthemeSingapore}
+
+
+% layout settings
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left = 4mm}
+\setbeamersize{text margin right = 4mm}
+\setbeamercovered{transparent}
+
+% other packages
+%\usetheme[Boadilla]{}
+\usepackage{calc}
+\usepackage[ruled]{algorithm2e}
+\usepackage{stmaryrd}
+%
+
+%\usepackage{tabularx,booktabs}
+\usepackage{booktabs}
+%\useinnertheme{rounded}
+\usecolortheme{dolphin}
+\usecolortheme{rose}
+%\setbeamercolor{title}{fg=black,bg=white!80!black}
+\setbeamercolor{title}{fg=black,bg=white!80!blue}
+\usefonttheme[onlysmall]{structurebold}
+
+
+\usepackage{colortbl}
+
+\usepackage{listings}
+
+
+\definecolor{lightgray}{gray}{0.9} \lstset{backgroundcolor=\color{lightgray}}
+\lstdefinelanguage{rock}{morekeywords=
+  {mean,std,hist,save,load,rotate,min,max,get,
+	scale,union,delete,degree,kernel,gethw,getparameter,bandwidth,
+    symmetry,Miller,Miller2quat,uniformODF,unimodalODF,fibreODF,xvector,yvector,zvector,
+    loadPoleFigure,PoleFigure,plot,plotpdf,plotipdf,calcODF,vector3d,cross,norm,
+    dot,sum,savefigure,plotDiff,calcerror,
+    quaternion,idquaternion,dist,Laue,length,angle,add,subGrid,refine,GridLength,getResolution,getRho,
+    polar,S2Grid,santafee,mix2,modalorientation,fourier,textureindex,entropy,volume,
+    fibrevolume,uiimport,scatter,cif2symmetry,remove_outlier,
+    simulatePoleFigure,SimulateEBSD,grainfun,hold,getFundamentalRegion,symvec,
+    FourierODF,find_outlier,bar,copyproperty,plotspatial,hasholes,principalcomponents,
+    hullprincipalcomponents,loadEBSD,calcGrains,plotboundaries,plotodf,plotspatial,area,
+    aspectratio,grain,grainfun,grainsize,get,plotgrains,plotellipse,plotsubfractions,plotboundary,
+    hasholes,hassubfraction,hullarea,hullcentroid,hullperimeter,centroid,borderlength,
+    deltaarea,equivalentperimeter,perimeter,joincount,link,misorientation,neighbours,
+    paris,shapefactor,toebsd,rotation,axis,Euler,symmetrise,orientation,eq,inverse,BinghamODF,set,
+    project2FundamentalRegion,annotate},
+  sensitive=false, morestring=[b][\color{blue!80!red}]', moredelim=[is][\alert]{/+}{+/},
+  morecomment=[s][\emph]{<options}{>}, morecomment=[l]{\%},
+  commentstyle=\color{darkgray},
+basicstyle=\ttfamily}
+
+\lstset{language=rock}
+%\lstset{\color{red!80!blue!80}}
+\lstset{emph={symmetries,concentration},emphstyle={\bf \color{white!25!black}}}
+
+
+\newtheorem{Remark}{Remark}
+\newtheorem{Proposition}{Proposition}
+\renewcommand{\O}{\mathcal O}
+\newcommand{\PGroup}{S_\text{Point}}
+\newcommand{\Y}{\mathcal Y}
+\renewcommand{\angle}{\measuredangle}
+\newcommand{\mtex}{{\large \bf{\color{red}M}TEX\,}}%
+\newcommand{\MTEX}{{\bf {\color{red}M}TEX\,}}%
+\newcommand{\degree}{\ensuremath{^\circ}}   % Gradzeichen
+%\newcommand{\degree}{^\circ}
+\newcounter{exercisescounter}
+\newenvironment{Exercise}{\refstepcounter{exercisescounter}%
+  \begin{block}{Exercise \arabic{exercisescounter}}}
+  {\end{block}}
+
+
+\author{R. Hielscher}
+
+\title{{\Huge \bf{\color{red}M}TEX}}
+\subtitle{A Texture Calculation Toolbox}
+%\titlegraphic{\includegraphics[width=1.5cm]{pic/tu_logo}}
+
+\institute{Faculty of Mathematics,\\
+	Chemnitz University of Technology, Germany}
+
+\date{Freiberg, 7.-11. May 2012}
+
+
+\begin{document}
+
+%\include{preface}
+
+%\include{matlab}
+
+%\include{geometry}
+
+%\include{modelODF}
+
+%\include{ODFAnalysis}
+
+% \include{PoleFigure}
+
+%\include{EBSD}
+
+\include{grains}
+
+%\include{tensors}
+
+%\include{plotting}
+
+%\include{about}
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: .
+%%% End:
