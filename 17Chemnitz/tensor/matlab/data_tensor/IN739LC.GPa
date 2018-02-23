@@ -1,0 +1,17 @@
+IN739LC
+han1995_MatScEngA191
+density kg/m3
+8908.0
+a,b,c,alpha,beta,gamma
+  3.52    3.52    3.52   90.000  90.000  90.000
+Elastic constant axes X1,X2,X3
+Two orthogonal crystallographic directions
+X1,X3
+[100],[001]
+Cij (GPa)
+ 235.16  147.67 147.67    .00    .00    .00
+ 147.67  235.16 147.67    .00    .00    .00
+ 147.67  147.67 235.16    .00    .00    .00
+    .00     .00    .00 122.53    .00    .00
+    .00     .00    .00    .00 122.53    .00
+    .00     .00    .00    .00    .00 122.53
