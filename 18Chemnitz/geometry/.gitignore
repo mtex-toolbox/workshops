@@ -1,0 +1,10 @@
+*.vrb
+*.toc
+*.synctex.gz
+*.snm
+*.nav
+*.aux
+/misOrientations.pdf
+/CrystalGeometry.pdf
+*.log
+*.out
